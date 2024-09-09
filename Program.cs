@@ -1,10 +1,10 @@
 ﻿using System.Data.SQLite;
 class Program
 {
-
+    static string path = @"C:\Users\Pozzame\Documents\Corso_2024\Database\database.db";
     static void Main(string[] args)
     {
-        string path = @"C:\Users\Pozzame\Documents\Corso_2024\Database\database.db";
+        
         if (!File.Exists(path))
         {
             SQLiteConnection.CreateFile(path);
@@ -25,12 +25,12 @@ class Program
             CREATE TABLE categorie 
             (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                categoria TEXT UNIQUE,
+                nome TEXT UNIQUE,
                 descrizione text
             );
-            INSERT INTO categorie (categoria, descrizione) 
+            INSERT INTO categorie (nome, descrizione) 
                 VALUES ('Carne', 'La carne');
-            INSERT INTO categorie (categoria, descrizione) 
+            INSERT INTO categorie (nome, descrizione) 
                 VALUES ('Pesce', 'Il pesce');
             INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) 
                 VALUES ('Simmental', 10, 100, true, '2026-12-12', 1);
@@ -76,7 +76,7 @@ class Program
         string scadenza = Console.ReadLine()!;
         Console.WriteLine("Inserisci id categoria");
         string id_categoria = Console.ReadLine()!;
-        SQLiteConnection connection = new SQLiteConnection($"Data Source=database.db;Versione=3;");
+        SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
         string sql = $"INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) VALUES ('{nome}',{prezzo}, {quantita}, true, '{scadenza}', {id_categoria})";
         SQLiteCommand command = new SQLiteCommand(sql, connection);
@@ -86,14 +86,14 @@ class Program
 
     static void VisualizzaProdotti()
     {
-        SQLiteConnection connection = new SQLiteConnection($"Data Source=database.db;Versione=3;");
+        SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
-        string sql = "SELECT * FROM prodotti";
+        string sql = "SELECT strftime('%d/%m/%Y', scadenza) as scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id";
         SQLiteCommand command = new SQLiteCommand(sql, connection);
         SQLiteDataReader reader = command.ExecuteReader();
         while (reader.Read())
         {
-            Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categorie.categoria"]}");
+            Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
         }
         connection.Close();
     }
@@ -101,9 +101,9 @@ class Program
     {
         Console.WriteLine("inserisci il nome del prodotto da eliminare");
         string nome = Console.ReadLine()!;
-        SQLiteConnection connection = new SQLiteConnection($"Data Source=database.db;Versione=3;");
+        SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
-        string sql = "$DELETE FROM prodotti WHERE nome = '{nome}'";
+        string sql = $"DELETE FROM prodotti WHERE nome = '{nome}'";
         SQLiteCommand command = new SQLiteCommand(sql, connection);
         command.ExecuteNonQuery();
         connection.Close();
