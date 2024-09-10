@@ -51,10 +51,11 @@ class Program
         while (true)
         {
             Console.WriteLine("1 - Inserisci prodotto");
-            Console.WriteLine("2 - Visualizzazioni");
+            Console.WriteLine("2 - Visualizzazioni prodotti");
             Console.WriteLine("3 - Elimina prodotto");
             Console.WriteLine("4 - Modifica prezzo prodotto");
-            Console.WriteLine("5 - Esci");
+            Console.WriteLine("5 - Visualitta Categorie");
+            Console.WriteLine("6 - Esci");
             Console.WriteLine("Scegli un'opzione");
             int scelta = Convert.ToInt32(Console.ReadLine());
             switch (scelta)
@@ -63,12 +64,12 @@ class Program
                     InserisciProdotto();
                     break;
                 case 2:
-                    Console.WriteLine("1 - Visualitta tutto");
+                    Console.WriteLine("1 - Visualizza tutto");
                     Console.WriteLine("2 - Ordina per prezzo");
                     Console.WriteLine("3 - Ordina per quantita");
                     Console.WriteLine("4 - Visualizza il più costoso");
                     Console.WriteLine("5 - Visualizza il meno costoso");
-                    Console.WriteLine("6 - Visualitta un prodotto");
+                    Console.WriteLine("6 - Visualizza un prodotto");
                     scelta = Convert.ToInt32(Console.ReadLine());
                     VisualizzaProdotti(scelta);
                     break;
@@ -77,6 +78,9 @@ class Program
                     break;
                 case 4:
                     ModificaPrezzo();
+                    break;
+                case 5:
+                    VisualizzaCategorie();
                     break;
                 default:
                     return;
