@@ -1,10 +1,11 @@
-﻿using System.Data.SQLite;
+﻿using System.Collections;
+using System.Data.SQLite;
 class Program
 {
     static string path = @"C:\Users\Pozzame\Documents\Corso_2024\Database\database.db";
     static void Main(string[] args)
     {
-        
+
         if (!File.Exists(path))
         {
             SQLiteConnection.CreateFile(path);
@@ -50,20 +51,51 @@ class Program
         while (true)
         {
             Console.WriteLine("1 - Inserisci prodotto");
-            Console.WriteLine("2 - Visualizza prodotti");
+            Console.WriteLine("2 - Visualizzazioni");
             Console.WriteLine("3 - Elimina prodotto");
-            Console.WriteLine("4 - Esci");
+            Console.WriteLine("4 - Modifica prezzo prodotto");
+            Console.WriteLine("5 - Esci");
             Console.WriteLine("Scegli un'opzione");
-            string scelta = Console.ReadLine()!;
-            if (scelta == "1")
-                InserisciProdotto();
-            else if (scelta == "2")
-                VisualizzaProdotti();
-            else if (scelta == "3")
-                EliminaProdotto();
-            else if (scelta == "4")
-                break;
+            int scelta = Convert.ToInt32(Console.ReadLine());
+            switch (scelta)
+            {
+                case 1:
+                    InserisciProdotto();
+                    break;
+                case 2:
+                    Console.WriteLine("1 - Visualitta tutto");
+                    Console.WriteLine("2 - Ordina per prezzo");
+                    Console.WriteLine("3 - Ordina per quantita");
+                    Console.WriteLine("4 - Visualizza il più costoso");
+                    Console.WriteLine("5 - Visualizza il meno costoso");
+                    Console.WriteLine("6 - Visualitta un prodotto");
+                    scelta = Convert.ToInt32(Console.ReadLine());
+                    VisualizzaProdotti(scelta);
+                    break;
+                case 3:
+                    EliminaProdotto();
+                    break;
+                case 4:
+                    ModificaPrezzo();
+                    break;
+                default:
+                    return;
+            }
         }
+    }
+
+    static void ModificaPrezzo()
+    {
+        Console.WriteLine("Inserisci il nome del prodotto da modificare");
+        string nome = Console.ReadLine()!;
+        Console.WriteLine("Nuovo prezzo?");
+        string prezzo = Console.ReadLine()!;
+        SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+        connection.Open();
+        string sql = $"UPDATE prodotti SET prezzo = {prezzo} WHERE nome = '{nome}';";
+        SQLiteCommand command = new SQLiteCommand(sql, connection);
+        command.ExecuteNonQuery();
+        connection.Close();
     }
 
     static void InserisciProdotto()
@@ -87,7 +119,7 @@ class Program
         connection.Close();
     }
 
-    private static void VisualizzaCategorie()
+    static void VisualizzaCategorie()
     {
         SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
@@ -101,18 +133,97 @@ class Program
         connection.Close();
     }
 
-    static void VisualizzaProdotti()
+    static void VisualizzaProdotti(int scelta)
     {
-        SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
-        connection.Open();
-        string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id";
-        SQLiteCommand command = new SQLiteCommand(sql, connection);
-        SQLiteDataReader reader = command.ExecuteReader();
-        while (reader.Read())
+        switch (scelta)
         {
-            Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
+            case 1:
+                {
+                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+                    connection.Open();
+                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id";
+                    SQLiteCommand command = new SQLiteCommand(sql, connection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
+                    }
+                    connection.Close();
+                    break;
+                }
+            case 2:
+                {
+                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+                    connection.Open();
+                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY prezzo";
+                    SQLiteCommand command = new SQLiteCommand(sql, connection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
+                    }
+                    connection.Close();
+                    break;
+                }
+            case 3:
+                {
+                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+                    connection.Open();
+                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY quantita";
+                    SQLiteCommand command = new SQLiteCommand(sql, connection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
+                    }
+                    connection.Close();
+                    break;
+                }
+            case 4:
+                {
+                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+                    connection.Open();
+                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY prezzo DESC LIMIT 1";
+                    SQLiteCommand command = new SQLiteCommand(sql, connection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
+                    }
+                    connection.Close();
+                    break;
+                }
+            case 5:
+                {
+                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+                    connection.Open();
+                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY prezzo ASC LIMIT 1";
+                    SQLiteCommand command = new SQLiteCommand(sql, connection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
+                    }
+                    connection.Close();
+                    break;
+                }
+            case 6:
+                {
+                    Console.WriteLine("Inserisci il nome del prodotto da visualizzare");
+                    string nome = Console.ReadLine()!;
+                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+                    connection.Open();
+                    string sql = $"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id WHERE prodotti.nome = '{nome}'";
+                    SQLiteCommand command = new SQLiteCommand(sql, connection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
+                    }
+                    connection.Close();
+                    break;
+                }
         }
-        connection.Close();
     }
     static void EliminaProdotto()
     {
@@ -125,7 +236,4 @@ class Program
         command.ExecuteNonQuery();
         connection.Close();
     }
-
-
-
 }
