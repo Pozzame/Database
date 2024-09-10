@@ -32,6 +32,8 @@ class Program
                 VALUES ('Carne', 'La carne');
             INSERT INTO categorie (nome, descrizione) 
                 VALUES ('Pesce', 'Il pesce');
+            INSERT INTO categorie (nome, descrizione) 
+                VALUES ('Formaggi', 'Il pesce');
             INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) 
                 VALUES ('Simmental', 10, 100, true, '2026-12-12', 1);
             INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) 
@@ -74,7 +76,8 @@ class Program
         string quantita = Console.ReadLine()!;
         Console.WriteLine("Inserisci scadenza");
         string scadenza = Console.ReadLine()!;
-        Console.WriteLine("Inserisci id categoria");
+        Console.WriteLine("Scegli categoria:");
+        VisualizzaCategorie();
         string id_categoria = Console.ReadLine()!;
         SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
@@ -84,11 +87,25 @@ class Program
         connection.Close();
     }
 
+    private static void VisualizzaCategorie()
+    {
+        SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+        connection.Open();
+        string sql = "SELECT * FROM categorie";
+        SQLiteCommand command = new SQLiteCommand(sql, connection);
+        SQLiteDataReader reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, descrizione: {reader["descrizione"]}");
+        }
+        connection.Close();
+    }
+
     static void VisualizzaProdotti()
     {
         SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
-        string sql = "SELECT strftime('%d/%m/%Y', scadenza) as scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id";
+        string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id";
         SQLiteCommand command = new SQLiteCommand(sql, connection);
         SQLiteDataReader reader = command.ExecuteReader();
         while (reader.Read())
