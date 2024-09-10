@@ -41,6 +41,8 @@ class Program
                 VALUES ('Riomare', 20, 200, true, '2025-12-12', 2);
             INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) 
                 VALUES ('Manzotin', 10, 100, true, '2026-12-12', 1);
+            INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) 
+                VALUES ('Babybel', 5, 500, true, '2025-12-12', 3);
             ";
 
             SQLiteCommand command = new SQLiteCommand(sql, connection);
