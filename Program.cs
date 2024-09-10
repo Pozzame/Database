@@ -74,7 +74,7 @@ class Program
         string prezzo = Console.ReadLine()!;
         Console.WriteLine("Inserisci quantità");
         string quantita = Console.ReadLine()!;
-        Console.WriteLine("Inserisci scadenza");
+        Console.WriteLine("Inserisci scadenza [YYYY-mm-dd]");
         string scadenza = Console.ReadLine()!;
         Console.WriteLine("Scegli categoria:");
         VisualizzaCategorie();
