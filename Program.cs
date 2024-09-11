@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 class Program
 {
     static string path = @"C:\Users\Pozzame\Documents\Corso_2024\Database\database.db";
     static void Main(string[] args)
     {
-
         if (!File.Exists(path))
         {
             SQLiteConnection.CreateFile(path);
@@ -89,7 +87,6 @@ class Program
             }
         }
     }
-
     static void ModificaPrezzo()
     {
         Console.WriteLine("Inserisci il nome del prodotto da modificare");
@@ -119,7 +116,8 @@ class Program
         string id_categoria = Console.ReadLine()!;
         SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
-        string sql = $"INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) VALUES ('{nome}',{prezzo}, {quantita}, true, '{scadenza}', {id_categoria})";
+        string sql = @$"INSERT INTO prodotti (nome, prezzo, quantita, stato, scadenza, id_categoria) 
+                        VALUES ('{nome}',{prezzo}, {quantita}, true, '{scadenza}', {id_categoria})";
         SQLiteCommand command = new SQLiteCommand(sql, connection);
         command.ExecuteNonQuery();
         connection.Close();
@@ -139,83 +137,88 @@ class Program
 
     static void VisualizzaProdotti(int scelta)
     {
+        SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
+        connection.Open();
         switch (scelta)
         {
             case 1:
                 {
-                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
-                    connection.Open();
-                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id";
+                    string sql = @"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * 
+                                    FROM prodotti 
+                                    JOIN categorie ON prodotti.id_categoria == categorie.id";
                     SQLiteCommand command = new SQLiteCommand(sql, connection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                         Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
-                    connection.Close();
                     break;
                 }
             case 2:
                 {
-                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
-                    connection.Open();
-                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY prezzo";
+                    string sql = @"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * 
+                                    FROM prodotti 
+                                    JOIN categorie ON prodotti.id_categoria == categorie.id 
+                                    ORDER BY prezzo";
                     SQLiteCommand command = new SQLiteCommand(sql, connection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                         Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
-                    connection.Close();
                     break;
                 }
             case 3:
                 {
-                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
-                    connection.Open();
-                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY quantita";
+                    string sql = @"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * 
+                                    FROM prodotti 
+                                    JOIN categorie ON prodotti.id_categoria == categorie.id 
+                                    ORDER BY quantita";
                     SQLiteCommand command = new SQLiteCommand(sql, connection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                         Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
-                    connection.Close();
                     break;
                 }
             case 4:
                 {
-                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
-                    connection.Open();
-                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY prezzo DESC LIMIT 1";
+                    string sql = @"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * 
+                                    FROM prodotti 
+                                    JOIN categorie ON prodotti.id_categoria == categorie.id 
+                                    ORDER BY prezzo DESC LIMIT 1";
                     SQLiteCommand command = new SQLiteCommand(sql, connection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                         Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
-                    connection.Close();
                     break;
                 }
             case 5:
                 {
-                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
-                    connection.Open();
-                    string sql = "SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id ORDER BY prezzo ASC LIMIT 1";
+                    string sql = @"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * 
+                                    FROM prodotti 
+                                    JOIN categorie ON prodotti.id_categoria == categorie.id 
+                                    ORDER BY prezzo ASC LIMIT 1";
                     SQLiteCommand command = new SQLiteCommand(sql, connection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                         Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
-                    connection.Close();
                     break;
                 }
             case 6:
                 {
                     Console.WriteLine("Inserisci il nome del prodotto da visualizzare");
                     string nome = Console.ReadLine()!;
-                    SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
-                    connection.Open();
-                    string sql = $"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id WHERE prodotti.nome = '{nome}'";
+                    string sql = @$"SELECT strftime('%d/%m/%Y', scadenza) AS scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * 
+                                    FROM prodotti 
+                                    JOIN categorie ON prodotti.id_categoria == categorie.id 
+                                    WHERE prodotti.nome = '{nome}'";
                     SQLiteCommand command = new SQLiteCommand(sql, connection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                         Console.WriteLine($"id: {reader["id"]}, nome: {reader["nome"]}, prezzo:{reader["prezzo"]}, quantita: {reader["quantita"]}, stato: {reader["stato"]}, scadenza: {reader["scadenza"]}, categoria: {reader["categoria"]}");
-                    connection.Close();
                     break;
                 }
+            default:
+                Console.WriteLine("No selection");
+            break;
         }
+        connection.Close();
     }
     static void EliminaProdotto()
     {
