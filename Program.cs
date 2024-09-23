@@ -1,7 +1,7 @@
 ﻿using System.Data.SQLite;
 class Program
 {
-    static string path = @"C:\Users\Pozzame\Documents\Corso_2024\Database\database.db";
+    static string path = @"C:\Users\pozza\Documents\VisualStudioCode\Database\database.db";
     static void Main(string[] args)
     {
         
@@ -88,7 +88,7 @@ class Program
     {
         SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
-        string sql = "SELECT strftime('%d/%m/%Y', scadenza) as scadenza, prodotti.nome AS nome, categorie.nome AS categoria, * FROM prodotti JOIN categorie ON prodotti.id_categoria == categorie.id";
+        string sql = "SELECT strftime('%d/%m/%Y', scadenza) scadenza, prodotti.nome nome, categorie.nome categoria, * FROM prodotti JOIN categorie ON id_categoria == categorie.id";
         SQLiteCommand command = new SQLiteCommand(sql, connection);
         SQLiteDataReader reader = command.ExecuteReader();
         while (reader.Read())
