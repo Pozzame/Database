@@ -127,11 +127,9 @@ class Program
     {
         SQLiteConnection connection = new SQLiteConnection($"Data Source={path};Versione=3;");
         connection.Open();
-<<<<<<< HEAD
+
         string sql = "SELECT strftime('%d/%m/%Y', scadenza) scadenza, prodotti.nome nome, categorie.nome categoria, * FROM prodotti JOIN categorie ON id_categoria == categorie.id";
-=======
-        string sql = "SELECT * FROM categorie";
->>>>>>> eed817dd6cacb6852ca98699e996b8d376ea62d9
+
         SQLiteCommand command = new SQLiteCommand(sql, connection);
         SQLiteDataReader reader = command.ExecuteReader();
         while (reader.Read())
